@@ -5,22 +5,36 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Todo</title>
 </head>
 <body>
-    <h1>Add your tasks here : </h1>
-    <form action="" method="post">
-        {% csrf_token %}
-        <input type="text">
-        <input type="submit" value="Add Task">
-    </form>
+<h1>Add your tasks here : </h1>
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="text">
+    <input type="submit" value="Add Task">
+</form>
 
-    <h3 style="margin-top: 40px">Your Tasks list : </h3>
-    <div class="tasks-wrapper">
-        <ul class="list-todos">
-            <li>Go home</li>
-            <li>Go Office</li>
-        </ul>
-    </div>
+<h3 style="margin-top: 40px">Your Tasks list : </h3>
+<div class="tasks-wrapper">
+    <ul class="list-todos">
+        <li>Go home</li>
+        <li>Go Office</li>
+    </ul>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: '{% url 'todo_list' %}',
+            dataType: 'json',
+        }).done(function (response) {
+            console.log(response)
+        })
+    })
+</script>
 </body>
 </html>
