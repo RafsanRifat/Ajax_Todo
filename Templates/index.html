@@ -8,6 +8,19 @@
     <title>Todo</title>
 </head>
 <body>
-    <h1>Welcome</h1>
+    <h1>Add your tasks here : </h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="text">
+        <input type="submit" value="Add Task">
+    </form>
+
+    <h3 style="margin-top: 40px">Your Tasks list : </h3>
+    <div class="tasks-wrapper">
+        <ul class="list-todos">
+            <li>Go home</li>
+            <li>Go Office</li>
+        </ul>
+    </div>
 </body>
 </html>
