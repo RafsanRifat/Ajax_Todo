@@ -54,11 +54,11 @@
 
 <!--Create Todo-->
 <script>
-    $(document).ready(function (){
-        $('#todo-form').submit(function (e){
+    $(document).ready(function () {
+        $('#todo-form').submit(function (e) {
             e.preventDefault();
 
-            var url = '{% url 'todo-create' %}'
+            var url = '{% url 'create_todo' %}'
             var data = {
                 todo_name: $('#todo_name').val(),
                 csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
@@ -68,9 +68,10 @@
                 url: url,
                 type: 'POST',
                 data: data,
-            }).done(function (response){
+            }).done(function (response) {
                 console.log(response)
             })
+            $(this).trigger('reset')
         })
     })
 </script>
