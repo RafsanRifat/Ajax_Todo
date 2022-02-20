@@ -43,7 +43,8 @@
                 console.log(response.todos[i].task)
                 var todo = '<span>${response.todos[i].task}</span>'
                 var todo = response.todos[i].task
-                var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class=""> ' + '<button class="btn btn-success btn-sm me-3">Edit</button>' + '<button class="btn btn-danger btn-sm">Delete</button>' + '</div>  </li>'
+                id = response.todos[i].id
+                var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class=""> ' + '<button class="btn btn-success btn-sm me-3">Edit</button>' + '<button class="btn btn-danger btn-sm" data-todoId=" ' + response.todos[i].id + ' ">Delete</button>' + '</div>   </li>'
                 $('.list-todos').append(
                     item
                 )
@@ -70,16 +71,43 @@
                 data: data,
             }).done(function (response) {
                 console.log(response.todo_name)
+                console.log(response.todo_name.id)
 
 
-                    var todo = response.todo_name
-                    var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class=""> ' + '<button class="btn btn-success btn-sm me-3">Edit</button>' + '<button class="btn btn-danger btn-sm">Delete</button>' + '</div>  </li>'
-                    $('.list-todos').append(
-                        item
-                    )
+                var todo = response.todo_name
+                var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class="button-wrapper"> ' + '<button class="btn edit btn-success btn-sm me-3" data-sid="">Edit</button>' + '<button class="btn btn-danger btn-delete btn-sm">Delete</button>' + '</div>  </li>'
+                $('.list-todos').append(
+                    item
+                )
 
             })
             $(this).trigger('reset')
+        })
+    })
+
+</script>
+
+<!--Delete Todo-->
+<script>
+    $(document).ready(function () {
+        $('.list-todos').on('click', '.list-group-item', function (event) {
+
+        }).on('click', '.btn-danger', function (event) {
+            var id = $(this).attr('data-todoId');
+            console.log('Delete Button working');
+            console.log(id);
+            mydata = {
+                sid: id,
+                csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+            }
+
+            $.ajax({
+                url: '{% url 'delete' %}',
+                type: 'POST',
+                data: mydata,
+            }).done(function (response) {
+                console.log(response)
+            })
         })
     })
 </script>
