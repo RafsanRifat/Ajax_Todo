@@ -13,15 +13,15 @@
 <body>
 <div class="container">
     <h1>Add your tasks here : </h1>
-    <form action="" method="post">
+    <form id="todo-form" action="" method="post">
         {% csrf_token %}
-        <div class="form-wrapper d-flex" >
+        <div class="form-wrapper d-flex">
             <input type="text" class="form-control" id="todo_name" placeholder="Add a todo" required>
-            <button type="submit" class="text-white btn btn-info d-inline">Submit</button>
+            <button type="submit" class="text-white btn btn-info d-inline ms-3">Submit</button>
         </div>
     </form>
 
-    <h3 style="margin-top: 40px">Your Tasks list : </h3>
+    <h3 style="margin-top: 60px; margin-bottom:30px">Your Tasks list : </h3>
     <div class="tasks-wrapper">
         <ul class="list-todos">
 
@@ -32,24 +32,45 @@
 
 <script>
     $(document).ready(function () {
+        <!--Ajax get request-->
         $.ajax({
             type: 'GET',
             url: '{% url 'todo_list' %}',
             dataType: 'json',
         }).done(function (response) {
+            <!--Ajax Get data-->
             for (var i in response.todos) {
                 console.log(response.todos[i].task)
                 {#var todo = '<span>${response.todos[i].task}</span>'#}
                 var todo = response.todos[i].task
-
                 var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class=""> ' + '<button class="btn btn-success btn-sm me-3">Edit</button>' + '<button class="btn btn-danger btn-sm">Delete</button>' + '</div>  </li>'
-
                 $('.list-todos').append(
                     item
                 )
+            }
+        });
+    })
+</script>
 
+<!--Create Todo-->
+<script>
+    $(document).ready(function (){
+        $('#todo-form').submit(function (e){
+            e.preventDefault();
+
+            var url = '{% url 'todo-create' %}'
+            var data = {
+                todo_name: $('#todo_name').val(),
+                csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
             }
 
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+            }).done(function (response){
+                console.log(response)
+            })
         })
     })
 </script>
