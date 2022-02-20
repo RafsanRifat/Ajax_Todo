@@ -41,7 +41,7 @@
             <!--Ajax Get data-->
             for (var i in response.todos) {
                 console.log(response.todos[i].task)
-                {#var todo = '<span>${response.todos[i].task}</span>'#}
+                var todo = '<span>${response.todos[i].task}</span>'
                 var todo = response.todos[i].task
                 var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class=""> ' + '<button class="btn btn-success btn-sm me-3">Edit</button>' + '<button class="btn btn-danger btn-sm">Delete</button>' + '</div>  </li>'
                 $('.list-todos').append(
@@ -69,7 +69,15 @@
                 type: 'POST',
                 data: data,
             }).done(function (response) {
-                console.log(response)
+                console.log(response.todo_name)
+
+
+                    var todo = response.todo_name
+                    var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class=""> ' + '<button class="btn btn-success btn-sm me-3">Edit</button>' + '<button class="btn btn-danger btn-sm">Delete</button>' + '</div>  </li>'
+                    $('.list-todos').append(
+                        item
+                    )
+
             })
             $(this).trigger('reset')
         })
