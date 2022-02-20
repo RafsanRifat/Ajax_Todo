@@ -7,6 +7,7 @@ from django.http import JsonResponse
 def home(request):
     return render(request, 'index.html')
 
+
 def todo_list(request):
     todos = Todo.objects.all()
-    return JsonResponse(todos)
+    return JsonResponse({'todos': list(todos.values())})
