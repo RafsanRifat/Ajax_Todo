@@ -16,6 +16,8 @@ def todo_list(request):
 def create_todo(request):
     if request.method == 'POST':
         todo_name = request.POST.get('todo_name')
+        sid = request.POST.get('stuid')
+        print("This is a new id" + sid)
         todo = Todo.objects.create(task=todo_name)
         todo_id = todo.id
         print(todo_id)
@@ -36,5 +38,7 @@ def edit(request):
         id = request.POST.get('sid')
         update_item = Todo.objects.get(pk=id)
         selected_item = update_item.task
+        selected_id = update_item.id
         print(selected_item)
-        return JsonResponse({'selected_item': update_item.task})
+        print(selected_id)
+        return JsonResponse({'selected_item': update_item.task, 'selected_id': selected_id})

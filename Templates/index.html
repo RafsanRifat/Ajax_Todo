@@ -15,6 +15,7 @@
     <h1>Add your tasks here : </h1>
     <form id="todo-form" action="" method="post">
         {% csrf_token %}
+        <input type="hidden" name="stuid" id="stuid">
         <div class="form-wrapper d-flex">
             <input type="text" class="form-control" id="todo_name" placeholder="Add a todo" required>
             <button type="submit" class="text-white btn btn-info d-inline ms-3">Submit</button>
@@ -61,6 +62,7 @@
 
             var url = '{% url 'create_todo' %}'
             var data = {
+                stuid : $('#stuid').val(),
                 todo_name: $('#todo_name').val(),
                 csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
             }
@@ -136,6 +138,8 @@
                 data: mydata,
             }).done(function (response) {
                 console.log(response.selected_item)
+                console.log(response.selected_id)
+                $('#stuid').val(response.selected_id)
                 $('#todo_name').val(response.selected_item)
             })
         })
