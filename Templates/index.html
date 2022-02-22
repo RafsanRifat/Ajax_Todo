@@ -17,7 +17,7 @@
         {% csrf_token %}
         <input type="hidden" name="stuid" id="stuid">
         <div class="form-wrapper d-flex">
-            <input type="text" class="form-control" id="todo_name" placeholder="Add a todo" required>
+            <input type="text" class="form-control" id="todo_name"  placeholder="Add a todo" required>
             <button type="submit" class="text-white btn btn-info d-inline ms-3">Submit</button>
         </div>
     </form>
@@ -28,6 +28,36 @@
 
         </ul>
     </div>
+
+    <!--Edit modal-->
+    <!-- Button trigger modal -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update task</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="todo-form" action="" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="stuid" id="stuid">
+                        <div class="form-wrapper d-flex">
+                            <input type="text" class="form-control" id="todo_update" placeholder="" required>
+                            <button type="submit" class="btn btn-primary"  data-bs-dismiss="modal">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+{#                <div class="modal-footer">#}
+{#                    #}
+{#                </div>#}
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
@@ -45,7 +75,7 @@
                 var todo = '<span>${response.todos[i].task}</span>'
                 var todo = response.todos[i].task
                 id = response.todos[i].id
-                var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class=""> ' + '<button class="edit-btn btn btn-success btn-sm me-3" data-todoId=" ' + response.todos[i].id + ' ">Edit</button>' + '<button class="btn btn-danger btn-sm" data-todoId=" ' + response.todos[i].id + ' ">Delete</button>' + '</div>   </li>'
+                var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class=""> ' + '<button class="edit-btn btn btn-success btn-sm me-3" data-todoId=" ' + response.todos[i].id + ' " data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>' + '<button class="btn btn-danger btn-sm" data-todoId=" ' + response.todos[i].id + ' ">Delete</button>' + '</div>   </li>'
                 $('.list-todos').append(
                     item
                 )
@@ -62,7 +92,7 @@
 
             var url = '{% url 'create_todo' %}'
             var data = {
-                stuid : $('#stuid').val(),
+                stuid: $('#stuid').val(),
                 todo_name: $('#todo_name').val(),
                 csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
             }
@@ -75,9 +105,8 @@
                 console.log(response.todo_name)
                 console.log(response.todo_name.id)
 
-
                 var todo = response.todo_name
-                var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class="button-wrapper"> ' + '<button class="btn edit-btn btn-success btn-sm me-3" data-sid="">Edit</button>' + '<button class="btn btn-danger btn-delete btn-sm">Delete</button>' + '</div>  </li>'
+                var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class="button-wrapper"> ' + '<button class="btn edit-btn btn-success btn-sm me-3" data-sid="" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>' + '<button class="btn btn-danger btn-delete btn-sm">Delete</button>' + '</div>  </li>'
                 $('.list-todos').append(
                     item
                 )
@@ -140,7 +169,7 @@
                 console.log(response.selected_item)
                 console.log(response.selected_id)
                 $('#stuid').val(response.selected_id)
-                $('#todo_name').val(response.selected_item)
+                $('#todo_update').val(response.selected_item)
             })
         })
     })

@@ -18,10 +18,11 @@ def create_todo(request):
         todo_name = request.POST.get('todo_name')
         sid = request.POST.get('stuid')
         print("This is a new id" + sid)
-        todo = Todo.objects.create(task=todo_name)
-        todo_id = todo.id
-        print(todo_id)
-        return JsonResponse({'todo_name': todo.task, 'todo_id': todo_id})
+        if sid == '':
+            todo = Todo.objects.create(task=todo_name)
+        else:
+            todo = Todo.objects.create(pk=sid, task=todo_name)
+        return JsonResponse({'todo_name': todo.task})
 
 
 def delete(request):
