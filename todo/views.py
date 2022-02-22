@@ -40,6 +40,9 @@ def edit(request):
         update_item = Todo.objects.get(pk=id)
         selected_item = update_item.task
         selected_id = update_item.id
+        if id == selected_id:
+            Todo.task = selected_item
+            Todo.task.save()
         print(selected_item)
         print(selected_id)
         return JsonResponse({'selected_item': update_item.task, 'selected_id': selected_id})
