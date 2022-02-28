@@ -45,3 +45,14 @@ def edit(request, pk):
         'task': item.task,
         'update_id': item.id
     })
+
+
+def registration_home(request):
+    return render(request, 'registration.html')
+
+
+def registration(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        return JsonResponse({'email': email, 'password': password})
