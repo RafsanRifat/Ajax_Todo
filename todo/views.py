@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Todo
+from .models import Todo, Registration
 from django.http import JsonResponse
 
 
@@ -55,4 +55,6 @@ def registration(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        return JsonResponse({'email': email, 'password': password})
+        new_user = Registration.objects.create(email=email, password=password)
+        new_user.save()
+        return JsonResponse({'message': 'Congratulation ! you have successfully created your account'})
