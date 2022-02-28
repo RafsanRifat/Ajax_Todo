@@ -47,7 +47,8 @@
                         <input type="hidden" name="stuid" id="stuid">
                         <div class="form-wrapper d-flex">
                             <input type="text" class="form-control" id="todo_update" placeholder="" required>
-                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Update</button>
+                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="update">Update
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -75,7 +76,7 @@
                 var todo = '<span>${response.todos[i].task}</span>'
                 var todo = response.todos[i].task
                 id = response.todos[i].id
-                var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class=""> ' + '<button class="edit-btn btn btn-success btn-sm me-3" data-todoId=" ' + response.todos[i].id + ' " data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>' + '<button class="btn btn-danger btn-sm" data-todoId=" ' + response.todos[i].id + ' ">Delete</button>' + '</div>   </li>'
+                var item = '<li class="list-group-item d-flex justify-content-between">' + todo + '<div class=""> ' + '<button class="edit-btn btn btn-success btn-sm me-3" data-todoId="' + response.todos[i].id + '" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>' + '<button class="btn btn-danger btn-sm" data-todoId=" ' + response.todos[i].id + ' ">Delete</button>' + '</div>   </li>'
                 $('.list-todos').append(
                     item
                 )
@@ -121,7 +122,40 @@
 <!--Delete Todo-->
 <script>
     $(document).ready(function () {
-        $('.list-todos').on('click', '.list-group-item', function (event) {
+        $('body').on('click', '.edit-btn', function () {
+            var id = $(this).data('todoid')
+            $.get(`/todos/${id}/`).done(function (data) {
+                $('#stuid').val(id)
+                $('#todo_update').val(data.task)
+            });
+        });
+
+        $('#update').click(function (e) {
+            e.preventDefault();
+
+            var mydata = {
+                csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+                title: $('#todo_update').val(),
+            }
+
+            $.ajax({
+                url: `/todos/${$('#stuid').val()}/`,
+                type: 'POST',
+                data: mydata,
+            }).done(function (response) {
+                console.log(response)
+                var updated_todo = response.task
+                console.log(updated_todo)
+                console.log(response.update_id)
+                var item = '<li class="list-group-item d-flex justify-content-between">' + updated_todo + '<div class="button-wrapper"> ' + '<button class="btn edit-btn btn-success btn-sm me-3" data-sid="" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>' + '<button class="btn btn-danger btn-delete btn-sm">Delete</button>' + '</div>  </li>'
+                $('.list-todos').append(
+                    item
+                )
+
+            })
+        });
+        /**
+         $('.list-todos').on('click', '.list-group-item', function (event) {
 
         }).on('click', '.btn-danger', function (event) {
             var id = $(this).attr('data-todoId');
@@ -144,14 +178,16 @@
 
             })
         })
+         */
     })
 </script>
 
 <!--Edit Todo-->
 <script>
     $(document).ready(function () {
-        $('.list-todos').on('click', '.list-group-item', function (event) {
-
+        /**
+         $('.list-todos').on('click', '.list-group-item', function (event) {
+            console.log('hello')
         }).on('click', '.btn-success', function (event) {
             var id = $(this).attr('data-todoId');
             console.log('Edit Button working');
@@ -159,10 +195,11 @@
             mydata = {
                 sid: id,
                 csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+                title: $('#todo_update').val(),
             }
 
             $.ajax({
-                url: '{% url 'edit' %}',
+                url: '',
                 type: 'POST',
                 data: mydata,
             }).done(function (response) {
@@ -172,6 +209,7 @@
                 $('#todo_update').val(response.selected_item)
             })
         })
+         */
     })
 </script>
 

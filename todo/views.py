@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Todo
 from django.http import JsonResponse
 
@@ -18,10 +18,10 @@ def create_todo(request):
         todo_name = request.POST.get('todo_name')
         sid = request.POST.get('stuid')
         print("This is a new id" + sid)
-        if sid == '':
-            todo = Todo.objects.create(task=todo_name)
-        else:
-            todo = Todo.objects.create(pk=sid, task=todo_name)
+        # if sid == '':
+        todo = Todo.objects.create(task=todo_name)
+        # else:
+        #     todo = Todo.objects.create(pk=sid, task=todo_name)
         return JsonResponse({'todo_name': todo.task})
 
 
@@ -34,15 +34,14 @@ def delete(request):
         return JsonResponse({'status': 1})
 
 
-def edit(request):
+def edit(request, pk):
+    item = get_object_or_404(Todo, pk=pk)
+
     if request.method == 'POST':
-        id = request.POST.get('sid')
-        update_item = Todo.objects.get(pk=id)
-        selected_item = update_item.task
-        selected_id = update_item.id
-        if id == selected_id:
-            Todo.task = selected_item
-            Todo.task.save()
-        print(selected_item)
-        print(selected_id)
-        return JsonResponse({'selected_item': update_item.task, 'selected_id': selected_id})
+        item.task = request.POST.get('title')
+        item.save()
+
+    return JsonResponse({
+        'task': item.task,
+        'update_id': item.id
+    })

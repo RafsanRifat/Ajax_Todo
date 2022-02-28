@@ -7,5 +7,5 @@ urlpatterns = [
     path('todo_list/', todo_list, name='todo_list'),
     path('create_todo/', create_todo, name='create_todo'),
     path('delete/', delete, name='delete'),
-    path('edit/', edit, name='edit'),
+    path('todos/<int:pk>/', edit, name='edit'),
 ]
