@@ -1,6 +1,7 @@
 from django.db import models
 
 
+
 # Create your models here.
 
 class Todo(models.Model):
@@ -10,9 +11,12 @@ class Todo(models.Model):
         return self.task
 
 
-class Registration(models.Model):
-    email = models.TextField(max_length=100)
-    password = models.CharField(max_length=50)
+# class Registration(models.Model):
+#     email = models.TextField(max_length=100)
+#     password = models.CharField(max_length=50)
+#
+#     def __str__(self):
+#         return self.email
 
-    def __str__(self):
-        return self.email
+
+

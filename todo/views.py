@@ -1,6 +1,10 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Todo, Registration
+from django.contrib.auth.models import User
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Todo
 from django.http import JsonResponse
+from django.contrib.auth import login, authenticate
+# from django.contrib.auth.forms import UserCreationForm
+from .forms import UserCreationForm
 
 
 # Create your views here.
@@ -48,13 +52,30 @@ def edit(request, pk):
 
 
 def registration_home(request):
-    return render(request, 'registration.html')
-
-
-def registration(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        new_user = Registration.objects.create(email=email, password=password)
-        new_user.save()
-        return JsonResponse({'message': 'Congratulation ! you have successfully created your account'})
+        form = UserCreationForm(request.POST)
+        username = request.POST.get('username')
+        print(username)
+        if form.is_valid():
+            username = request.POST.get('username')
+            email = request.POST.get('email')
+            password1 = request.POST.get('password1')
+            password2 = request.POST.get('password2')
+            print(email)
+
+            User.objects.create_user(username=username, email=email, password1=password1, password2=password2)
+            return JsonResponse({'Message': 'User created successfully'})
+
+
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration.html', {'form': form})
+
+# def registration(request):
+#     if request.method == 'POST':
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
+#         new_user = Registration.objects.create(email=email, password=password)
+#         new_user.save()
+#         return JsonResponse({'message': 'Congratulation ! you have successfully created your account'})
+
