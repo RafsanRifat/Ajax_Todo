@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.contrib.auth import login, authenticate
 # from django.contrib.auth.forms import UserCreationForm
 from .forms import UserCreationForm
+from django.core.serializers import serialize
 
 
 # Create your views here.
@@ -13,8 +14,20 @@ def home(request):
 
 
 def todo_list(request):
-    todos = Todo.objects.all()
-    return JsonResponse({'todos': list(todos.values())})
+    # todos = Todo.objects.all()
+    allTodo = Todo.objects.all()
+    todos = Todo.objects.filter(user=request.user).all()
+    alluser = []
+    for todo in allTodo:
+        user = todo.user
+        print(user)
+        alluser.append(user)
+    print(alluser)
+    print(todos)
+    alluser = serialize('json', alluser)
+    print(alluser)
+    return JsonResponse({'todos': list(todos.values()), 'alluser': alluser})
+    # return JsonResponse({'user': list(user)})
 
 
 def create_todo(request):
@@ -22,11 +35,9 @@ def create_todo(request):
         todo_name = request.POST.get('todo_name')
         sid = request.POST.get('stuid')
         print("This is a new id" + sid)
-        # if sid == '':
         todo = Todo.objects.create(task=todo_name)
-        # else:
-        #     todo = Todo.objects.create(pk=sid, task=todo_name)
-        return JsonResponse({'todo_name': todo.task})
+        todo_name = todo.task
+        return JsonResponse({'todo_name': todo.task, 'sid': sid})
 
 
 def delete(request):
@@ -56,15 +67,12 @@ def registration_home(request):
         form = UserCreationForm(request.POST)
         username = request.POST.get('username')
         print(username)
-        if form.is_valid():
-            username = request.POST.get('username')
-            email = request.POST.get('email')
-            password1 = request.POST.get('password1')
-            password2 = request.POST.get('password2')
-            print(email)
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password1')
 
-            User.objects.create_user(username=username, email=email, password1=password1, password2=password2)
-            return JsonResponse({'Message': 'User created successfully'})
+        User.objects.create_user(username=username, email=email, password=password)
+        return JsonResponse({'Message': 'User created successfully'})
 
 
     else:
@@ -78,4 +86,3 @@ def registration_home(request):
 #         new_user = Registration.objects.create(email=email, password=password)
 #         new_user.save()
 #         return JsonResponse({'message': 'Congratulation ! you have successfully created your account'})
-

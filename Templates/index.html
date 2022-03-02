@@ -20,6 +20,15 @@
         <input type="hidden" name="stuid" id="stuid">
         <div class="form-wrapper d-flex">
             <input type="text" class="form-control" id="todo_name" placeholder="Add a todo" required>
+            <div class="form-group">
+                <label for="userSelect">Select User</label>
+                <select class="form-control" id="userSelect">
+
+                    <option></option>
+
+
+                </select>
+            </div>
             <button type="submit" class="text-white btn btn-info d-inline ms-3">Submit</button>
         </div>
     </form>
@@ -79,10 +88,14 @@
                 var todo = '<span>${response.todos[i].task}</span>'
                 var todo = response.todos[i].task
                 id = response.todos[i].id
+                console.log(response.user)
                 var item = '<li  data-todolistId="' + response.todos[i].id + '" class="list-group-item d-flex justify-content-between"><span>' + todo + ' </span><div class=""> ' + '<button class="edit-btn btn btn-success btn-sm me-3" data-todoId="' + response.todos[i].id + '" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>' + '<button class="btn btn-danger btn-sm" data-todoId=" ' + response.todos[i].id + ' ">Delete</button>' + '</div>   </li>'
                 $('.list-todos').append(
                     item
                 )
+                for (newTodo in response.alluser) {
+                    console.log(newTodo)
+                }
             }
         });
     })
