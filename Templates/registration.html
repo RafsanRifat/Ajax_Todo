@@ -18,9 +18,9 @@
 <body>
 <div class="container">
     <!--Registration form-->
-    <div class="registration" id="registration">
+    <div class="registration">
         <h2>Please do Registration : </h2>
-        <form>
+        <form id="registration">
             {% csrf_token %}
             {{ form.as_p }}
             <button style="margin-top: 10px" type="submit" class="btn btn-primary">Submit</button>
@@ -52,8 +52,9 @@
             }).done(function (response) {
                 {#alert(response.message)#}
                 console.log(response.message)
+                console.log(response.errors)
             })
-            $('#registration').trigger('reset')
+            $('#registration').trigger("reset");
 
         })
     })

@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
+from django.db.models.manager import EmptyManager
 
 
 class UserCreationForm(UserCreationForm):
@@ -12,3 +13,10 @@ class UserCreationForm(UserCreationForm):
             'password1': None,
             'password2': None,
         }
+
+    class AnonymousUser:
+        is_staff = True
+        is_active = True
+        is_superuser = True
+        _groups = EmptyManager(Group)
+        _user_permissions = EmptyManager(Permission)

@@ -15,18 +15,8 @@ def home(request):
 
 def todo_list(request):
     # todos = Todo.objects.all()
-    allTodo = Todo.objects.all()
     todos = Todo.objects.filter(user=request.user).all()
-    alluser = []
-    for todo in allTodo:
-        user = todo.user
-        print(user)
-        alluser.append(user)
-    print(alluser)
-    print(todos)
-    alluser = serialize('json', alluser)
-    print(alluser)
-    return JsonResponse({'todos': list(todos.values()), 'alluser': alluser})
+    return JsonResponse({'todos': list(todos.values())})
     # return JsonResponse({'user': list(user)})
 
 
@@ -35,7 +25,7 @@ def create_todo(request):
         todo_name = request.POST.get('todo_name')
         sid = request.POST.get('stuid')
         print("This is a new id" + sid)
-        todo = Todo.objects.create(task=todo_name)
+        todo = Todo.objects.create(task=todo_name, user=request.user)
         todo_name = todo.task
         return JsonResponse({'todo_name': todo.task, 'sid': sid})
 
@@ -65,13 +55,27 @@ def edit(request, pk):
 def registration_home(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
-        username = request.POST.get('username')
-        print(username)
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password1')
 
-        User.objects.create_user(username=username, email=email, password=password)
+        if form.is_valid():
+            username = request.POST.get('username')
+            print(username)
+            username = request.POST.get('username')
+            email = request.POST.get('email')
+            password = request.POST.get('password1')
+
+            User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                is_staff=True,
+                is_superuser=True,
+                is_active=True,
+            )
+        else:
+            return JsonResponse({
+                'errors': form.errors
+            })
+
         return JsonResponse({'Message': 'User created successfully'})
 
 
