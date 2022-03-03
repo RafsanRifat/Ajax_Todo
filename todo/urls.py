@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from .views import home, todo_list, create_todo, delete, edit, registration_home
+from .views import home, todo_list, create_todo, delete, edit, registration_home, todo_login
 
 urlpatterns = [
     path('', home, name='home'),
@@ -9,4 +9,5 @@ urlpatterns = [
     path('delete/', delete, name='delete'),
     path('todos/<int:pk>/', edit, name='edit'),
     path('registration_home/', registration_home, name='registration_home'),
+    path('login/', todo_login, name='login'),
 ]

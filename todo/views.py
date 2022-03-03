@@ -71,6 +71,7 @@ def registration_home(request):
                 is_superuser=True,
                 is_active=True,
             )
+
         else:
             return JsonResponse({
                 'errors': form.errors
@@ -82,6 +83,21 @@ def registration_home(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration.html', {'form': form})
+
+
+def todo_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        print(username)
+        print(password)
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            return JsonResponse({'error_message': 'Invalid email or password'})
+    return render(request, 'login.html')
 
 # def registration(request):
 #     if request.method == 'POST':

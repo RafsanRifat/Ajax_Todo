@@ -14,19 +14,19 @@
 <body>
 <div class="container">
     <!--Login form-->
-    <div class="login" id="login">
+    <div class="login">
         <h2>Please Login here : </h2>
-        <form>
+        <form id="login">
+            {% csrf_token %}
             <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="loginEmail" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                <label for="exampleInputEmail1" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" id="loginUsername" aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="loginPassword">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" id="loginPassword">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Login</button>
         </form>
     </div>
 
@@ -36,13 +36,13 @@
 <!--registration-->
 <script>
     $(document).ready(function () {
-        $('#registration').submit(function (e) {
+        $('#login').submit(function (e) {
             e.preventDefault()
 
-            var url = '{% url 'registration' %}'
+            var url = '{% url 'login' %}'
             var data = {
-                email: $('#email').val(),
-                password: $('#password').val(),
+                username: $('#loginUsername').val(),
+                password: $('#loginPassword').val(),
                 csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
             }
 
@@ -50,10 +50,11 @@
                 url: url,
                 data: data,
                 type: 'POST'
+
             }).done(function (response) {
-                alert(response.message)
+                alert(response.error_message)
             })
-            $(this).trigger('reset')
+            $('#login').trigger('reset')
 
         })
     })
