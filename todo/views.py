@@ -1,11 +1,15 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.crypto import get_random_string
+
 from .models import Todo
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 # from django.contrib.auth.forms import UserCreationForm
 from .forms import UserCreationForm
 from django.core.serializers import serialize
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # Create your views here.
@@ -52,9 +56,31 @@ def edit(request, pk):
     })
 
 
+def generateOTP(request):
+    short_code = get_random_string(length=6, allowed_chars='A@$0BF5RH8LUTafbwty79%&')
+    print(short_code)
+    return short_code
+
+
 def registration_home(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
+        email = request.POST.get('email')
+        otpCode = generateOTP(request)
+        print(email)
+        send_mail(
+            # subject :
+            'OTP',
+
+            # Message :
+            'This is your OTP code. Please Use this OTP code To confirm your account : ' + otpCode,
+
+            # from_email:
+            settings.EMAIL_HOST_USER,
+
+            # recipient_list:
+            [email],
+        )
 
         if form.is_valid():
             username = request.POST.get('username')
@@ -85,6 +111,21 @@ def registration_home(request):
     return render(request, 'registration.html', {'form': form})
 
 
+def verification(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        otp = request.POST.get('otp')
+        user = User.objects.filter(email=email).first()
+        print(otp)
+        print(user.username)
+
+        if user.is_active == False:
+            user.is_active = True
+            user.save()
+
+    return render(request, 'verify.html')
+
+
 def todo_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -94,12 +135,9 @@ def todo_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
         else:
             return JsonResponse({'error_message': 'Invalid email or password'})
     return render(request, 'login.html')
-
-
 
 
 def todo_logout(request):

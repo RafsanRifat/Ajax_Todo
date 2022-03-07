@@ -14,7 +14,13 @@
 <div class="container">
 
 
-    <h1>Add your tasks here : </h1> <a href="{% url 'logout' %}" class="btn btn-danger d-inline">Logout</a>
+    <div class="title d-flex justify-content-between align-items-center mb-3"><h1>Add your tasks here : </h1>
+        {% if user.is_authenticated %}
+            <div class="logout-wrapper"><a href="{% url 'logout' %}" class="btn btn-danger d-inline">Logout</a></div>
+        {% else %}
+            <div class="logout-wrapper"><a href="{% url 'login' %}" class="btn btn-primary d-inline">Login</a></div>
+        {% endif %}
+    </div>
     <form id="todo-form" action="" method="post">
         {% csrf_token %}
         <input type="hidden" name="stuid" id="stuid">
