@@ -14,7 +14,7 @@
 <div class="container">
 
 
-    <h1>Add your tasks here : </h1>
+    <h1>Add your tasks here : </h1> <a href="{% url 'logout' %}" class="btn btn-danger d-inline">Logout</a>
     <form id="todo-form" action="" method="post">
         {% csrf_token %}
         <input type="hidden" name="stuid" id="stuid">

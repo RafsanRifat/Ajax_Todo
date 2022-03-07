@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Todo
 from django.http import JsonResponse
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 # from django.contrib.auth.forms import UserCreationForm
 from .forms import UserCreationForm
 from django.core.serializers import serialize
@@ -97,6 +97,13 @@ def todo_login(request):
             return redirect('home')
         else:
             return JsonResponse({'error_message': 'Invalid email or password'})
+    return render(request, 'login.html')
+
+
+
+
+def todo_logout(request):
+    logout(request)
     return render(request, 'login.html')
 
 # def registration(request):

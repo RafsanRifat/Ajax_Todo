@@ -53,8 +53,9 @@
 
             }).done(function (response) {
                 alert(response.error_message)
+                window.location = "{% url 'home' %}";
             })
-            $('#login').trigger('reset')
+
 
         })
     })
