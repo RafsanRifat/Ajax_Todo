@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.crypto import get_random_string
 
-from .models import Todo
+from .models import Todo, Profile
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 # from django.contrib.auth.forms import UserCreationForm
@@ -56,7 +56,7 @@ def edit(request, pk):
     })
 
 
-def generateOTP(request):
+def generateOTP():
     short_code = get_random_string(length=6, allowed_chars='A@$0BF5RH8LUTafbwty79%&')
     print(short_code)
     return short_code
@@ -66,21 +66,21 @@ def registration_home(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         email = request.POST.get('email')
-        otpCode = generateOTP(request)
+        otpCode = generateOTP()
         print(email)
-        send_mail(
-            # subject :
-            'OTP',
-
-            # Message :
-            'This is your OTP code. Please Use this OTP code To confirm your account : ' + otpCode,
-
-            # from_email:
-            settings.EMAIL_HOST_USER,
-
-            # recipient_list:
-            [email],
-        )
+        # send_mail(
+        #     # subject :
+        #     'OTP',
+        #
+        #     # Message :
+        #     'This is your OTP code. Please Use this OTP code To confirm your account : ' + otpCode,
+        #
+        #     # from_email:
+        #     settings.EMAIL_HOST_USER,
+        #
+        #     # recipient_list:
+        #     [email],
+        # )
 
         if form.is_valid():
             username = request.POST.get('username')
@@ -89,14 +89,16 @@ def registration_home(request):
             email = request.POST.get('email')
             password = request.POST.get('password1')
 
-            User.objects.create_user(
+            user = User.objects.create_user(
                 username=username,
                 email=email,
                 password=password,
                 is_staff=True,
                 is_superuser=True,
-                is_active=True,
+                is_active=False,
             )
+            Profile.objects.create(user=user, otp=otpCode)
+            user.save()
 
         else:
             return JsonResponse({
@@ -114,10 +116,13 @@ def registration_home(request):
 def verification(request):
     if request.method == 'POST':
         email = request.POST.get('email')
-        otp = request.POST.get('otp')
+        # otp = request.POST.get('otp')
         user = User.objects.filter(email=email).first()
-        print(otp)
+        # print(otp)
         print(user.username)
+
+        otp = user.profile.otp
+        print(otp)
 
         if user.is_active == False:
             user.is_active = True
