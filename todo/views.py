@@ -68,19 +68,19 @@ def registration_home(request):
         email = request.POST.get('email')
         otpCode = generateOTP()
         print(email)
-        # send_mail(
-        #     # subject :
-        #     'OTP',
-        #
-        #     # Message :
-        #     'This is your OTP code. Please Use this OTP code To confirm your account : ' + otpCode,
-        #
-        #     # from_email:
-        #     settings.EMAIL_HOST_USER,
-        #
-        #     # recipient_list:
-        #     [email],
-        # )
+        send_mail(
+            # subject :
+            'OTP',
+
+            # Message :
+            'This is your OTP code. Please Use this OTP code To confirm your account : ' + otpCode,
+
+            # from_email:
+            settings.EMAIL_HOST_USER,
+
+            # recipient_list:
+            [email],
+        )
 
         if form.is_valid():
             username = request.POST.get('username')
@@ -115,18 +115,22 @@ def registration_home(request):
 
 def verification(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        # otp = request.POST.get('otp')
-        user = User.objects.filter(email=email).first()
+        username = request.POST.get('username')
+        otp = request.POST.get('otp')
+        user = User.objects.filter(username=username).first()
         # print(otp)
         print(user.username)
 
         otp = user.profile.otp
         print(otp)
 
-        if user.is_active == False:
-            user.is_active = True
-            user.save()
+        if user.username == username and user.profile.otp == otp:
+
+            if user.is_active == False:
+                user.is_active = True
+                user.save()
+        else:
+            return JsonResponse({'error_verification': 'username or OTP is not matching'})
 
     return render(request, 'verify.html')
 

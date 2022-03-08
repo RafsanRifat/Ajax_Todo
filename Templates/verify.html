@@ -19,8 +19,8 @@
         <form id="verify">
             {% csrf_token %}
             <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Email</label>
-                <input type="text" name="email" class="form-control" id="verifyEmail" aria-describedby="emailHelp">
+                <label for="exampleInputEmail1" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" id="username" aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
                 <label for="otp" class="form-label">OTP</label>
@@ -41,7 +41,7 @@
 
             var url = '{% url 'verify' %}'
             var data = {
-                email: $('#verifyEmail').val(),
+                username: $('#username').val(),
                 otp: $('#otp').val(),
                 csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
             }
@@ -52,8 +52,8 @@
                 type: 'POST'
 
             }).done(function (response) {
-                alert(response.error_message)
-                {#window.location = "{% url 'home' %}";#}
+                {#alert(response.error_message)#}
+                window.location = "{% url 'login' %}";
             })
 
 
